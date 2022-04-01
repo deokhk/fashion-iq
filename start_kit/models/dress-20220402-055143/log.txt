@@ -1,0 +1,1 @@
+Namespace(batch_size=128, crop_size=224, data_set='dress', embed_size=512, learning_rate=0.001, log_step=15, num_workers=16, patient=3, save='models')

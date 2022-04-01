@@ -95,11 +95,13 @@ def finetune_attributes(args):
     # Load the models
     model = EfficientNet.from_pretrained('efficientnet-b7')
     model_type = 'ft'
+    '''
     ckpt = torch.load(args.pretrained_model, map_location='cpu')
     if "model_state" in ckpt:
         model.load_state_dict(ckpt["model_state"])
     else:
         model.load_state_dict(ckpt)
+    '''
     model.to(device)
 
     # - freeze the bottom part
