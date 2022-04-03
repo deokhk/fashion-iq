@@ -16,8 +16,8 @@ def preprocess_data(file_prefix, topic):
     Returns:
     None
     """
-    IMAGE_ROOT = 'resized_images/{}/'
-    CAPT = 'caption/pair2cap.{}.{}.json'
+    IMAGE_ROOT = 'data/resized_images/{}/'
+    CAPT = 'captions/cap.{}.{}.json'
     LABEL = 'attribute_prediction/attributes/{}_attribute_best.pth_{}_attributes.json'
     # DICT = 'attribute_prediction/attribtue2idx.json'
     # SPLIT = 'image_splits/split.{}.{}.json'
@@ -147,8 +147,8 @@ def parse_url(url):
 
 
 def preprocess_data_from_xiaoxiao(file_prefix, topic):
-    IMAGE_ROOT = 'resized_images/{}/'
-    CAPT = 'caption/pair2cap.{}.{}.json'
+    IMAGE_ROOT = 'data/resized_images/{}/'
+    CAPT = 'captions/cap.{}.{}.json'
     LABEL = 'data/fashion-IQ/predicted_attributes/{}_attribute_best.pth_{}_attributes.json'
     DICT = 'attribute_prediction/attribute2idx.json'
     # SPLIT = 'image_splits/split.{}.{}.json'
