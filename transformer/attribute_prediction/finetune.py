@@ -12,8 +12,12 @@ from efficientnet_pytorch import EfficientNet
 
 
 def create_exp_dir(path, scripts_to_save=None):
-    if not os.path.exists(path):
-        os.mkdir(path)
+    curdir = os.getcwd()
+    target_path = os.path.join(curdir, path)
+    print(target_path)
+    if not os.path.exists(target_path):
+        print('Make a save directory:', path)
+        os.mkdir(target_path)
     print('Experiment dir : {}'.format(path))
     if scripts_to_save is not None:
         if not os.path.exists(os.path.join(path, 'scripts')):
@@ -99,17 +103,28 @@ def finetune_attributes(args):
         shuffle=False)
 
     # Load the models
+    print('Load the models')
     model = EfficientNet.from_pretrained('efficientnet-b7')
     model_type = 'ft'
+
     '''
     ckpt = torch.load(args.pretrained_model, map_location='cpu')
     if "model_state" in ckpt:
         model.load_state_dict(ckpt["model_state"])
     else:
         model.load_state_dict(ckpt)
-    '''
     model.to(device)
-
+    '''
+    print('Setting trainable parameters')
+    trainable_parameters = []
+    for name, param in model.named_parameters():
+        param.requires_grad = True
+        trainable_parameters.append(param)
+    for name, param in model.named_parameters():
+        if param.requires_grad:
+            print(name)
+    model.to(device)
+    '''
     # - freeze the bottom part
     trainable_parameters = []
     for name, param in model.named_parameters():
@@ -123,13 +138,16 @@ def finetune_attributes(args):
         if param.requires_grad:
             print(name)
     model.to(device)
-
+    '''
+    
     # Loss and optimizer
+    print('Loss and optimizer')
     current_lr = args.learning_rate
     optimizer = torch.optim.Adam(lr=current_lr, params=trainable_parameters)
     bce_average = nn.BCEWithLogitsLoss(reduction='mean').to(device)
 
     # Experiment logging
+    print('Experiment logging')
     global_step = 0
     cur_patient = 0
     best_score = float('-inf')
