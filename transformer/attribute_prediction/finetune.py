@@ -203,9 +203,9 @@ if __name__ == '__main__':
     parser.add_argument('--image_folder', type=str,
                         default='../resized_images/{}/')
     parser.add_argument('--data_file', type=str,
-                        default='data/asin2attr.{}.{}.json')
+                        default='/home/deokhk/coursework/fashion-iq/data/asin2attr.{}.{}.json')
     parser.add_argument('--label_file', type=str,
-                        default='data/attribute2idx.json')
+                        default='/home/deokhk/coursework/fashion-iq/data/attribute2idx.json')
     parser.add_argument('--crop_size', type=int, default=224,
                         help='size for randomly cropping images')
     parser.add_argument('--data_set', type=str, default='dress',

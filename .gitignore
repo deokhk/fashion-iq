@@ -5,9 +5,12 @@ __pycache__/
 *.pickle
 *.pkl
 *.7z
+*.png
 # C extensions
 *.so
-
+*.txt
+*.zip
+*.tar.gz
 # Distribution / packaging
 .Python
 build/
