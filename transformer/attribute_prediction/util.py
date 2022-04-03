@@ -64,22 +64,23 @@ def png_to_jpg(category_split_path):
         img_png.save(modified_path)
     print("Converting completed!")
 
-def create_attribute2idx(data_path):
-    attributes = set()
-    for filename in os.listdir(data_path):
-        if filename.startswith("asin2") and filename.endswith(".json"):
-            full_path = os.path.join(data_path, filename)
-            with open(full_path, 'r') as f:
-                data = json.load(f)
-                for k,v in data.items():
-                    for sublist in v:
-                        for attr in sublist:
-                            attributes.add(attr)
-    attrs_list = list(attributes)
+
+def create_attribute2idx(attribute_file_path="/home/deokhk/coursework/fashion-iq/transformer/attribute_list.txt"):
+    """
+    attribute_file_path : deepfashion attribute_list.txt
+    """
+    with open(attribute_file_path, 'r') as f:
+        lines = f.readlines()
+    header = lines[0]
     attribute2idx = dict()
-    for idx, attr in enumerate(attrs_list):
+    for idx, line in enumerate(lines[1:]):
+        attr = line[:-2].strip()
+        attr_end = attr[-1]
+        if attr_end.endswith("1") or attr_end.endswith("2") or attr_end.endswith("3") or attr_end.endswith("4") or attr_end.endswith("5"):
+            attr = attr[:-1].strip()
         attribute2idx[attr] = idx
-    path = os.path.join(data_path, 'attribute2idx.json')
+    
+    path = os.path.join(os.path.dirname(attribute_file_path), 'attribute2idx.json')
     with open(path, 'w') as json_file:
         json.dump(attribute2idx, json_file)
 

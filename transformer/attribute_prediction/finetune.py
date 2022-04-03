@@ -41,6 +41,8 @@ def evaluate_model(data_loader, model, loss, device):
     error_sum = 0.0
     # Training loop
     fs_sum = 0.0
+    print("Now evaluating!")
+    total_length = len(data_loader)
     for i, (images, labels, _) in enumerate(data_loader):
         # Set mini-batch dataset
         with torch.no_grad():
@@ -49,17 +51,19 @@ def evaluate_model(data_loader, model, loss, device):
             outs = model(images)
             error = loss(outs, labels)
             fs = compute_metric(outs, labels)
-
             error_sum += error.item() * images.size(0)
             fs_sum += fs.item() * images.size(0)
 
             test_num += images.size(0)
+        if i%100 == 0:
+            print(f"{i} / {total_length} Done.")
 
     return error_sum / test_num, fs_sum / test_num
 
 
 def finetune_attributes(args):
     device = 'cuda' if torch.cuda.is_available() and not args.no_cuda else 'cpu'
+    print(device)
     # Build data loader
     # --Image preprocessing, normalization for the pretrained resnet
     transform = transforms.Compose([
@@ -142,7 +146,7 @@ def finetune_attributes(args):
             with open(os.path.join(save_folder, 'log.txt'), 'a+') as f_log:
                 f_log.write(s + '\n')
 
-    for epoch in range(1000):
+    for epoch in range(100):
         if global_step % args.checkpoint == 0:
             model.eval()
             logging('-' * 87)
@@ -203,11 +207,11 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     # data
     parser.add_argument('--image_folder', type=str,
-                        default='/home/deokhk/coursework/fashion-iq/transformer/resized_images/resized_images/{}/')
+                        default='/home/deokhk/coursework/fashion-iq/transformer/resized_images/{}/')
     parser.add_argument('--data_file', type=str,
                         default='/home/deokhk/coursework/fashion-iq/data/asin2attr.{}.{}.json')
     parser.add_argument('--label_file', type=str,
-                        default='/home/deokhk/coursework/fashion-iq/data/attribute2idx.json')
+                        default='/home/deokhk/coursework/fashion-iq/transformer/attribute2idx.json')
     parser.add_argument('--crop_size', type=int, default=224,
                         help='size for randomly cropping images')
     parser.add_argument('--data_set', type=str, default='dress',
@@ -231,7 +235,7 @@ if __name__ == '__main__':
                         help='patient for reducing learning rate')
 
     parser.add_argument('--no_cuda', action='store_true')
-    parser.add_argument('--batch_size', type=int, default=2)
+    parser.add_argument('--batch_size', type=int, default=16)
     parser.add_argument('--learning_rate', type=float, default=0.001)
 
     args = parser.parse_args()

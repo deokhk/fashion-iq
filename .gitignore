@@ -12,7 +12,9 @@ __pycache__/
 *.zip
 *.jpg
 *.tar.gz
+*.pth
 # Distribution / packaging
+
 .Python
 build/
 develop-eggs/
