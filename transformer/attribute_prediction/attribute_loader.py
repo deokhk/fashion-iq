@@ -27,6 +27,8 @@ class Dataset(data.Dataset):
 
         with open(class_file, 'r') as f:
             self.cls = json.load(f)
+            print(class_file)
+            print(self.cls)
 
         self.transform = transform
         return
@@ -35,7 +37,7 @@ class Dataset(data.Dataset):
         """Returns one data pair (image and caption)."""
         id = self.ids[index]
         asin = self.asin[id]
-        img_name = self.asin[id] + '.jpg'
+        img_name = self.asin[id] + '.png'
 
         image = Image.open(os.path.join(self.root, img_name)).convert('RGB')
         if self.transform is not None:
