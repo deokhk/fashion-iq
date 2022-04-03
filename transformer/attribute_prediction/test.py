@@ -111,7 +111,7 @@ def evaluate_attributes(args):
         idx2attr[val] = key
 
     model = EfficientNet.from_pretrained('efficientnet-b7')
-    ckpt = torch.load(args.pretrained_model, map_location='cpu')
+    ckpt = torch.load(args.pretrained_model)
     if "model_state" in ckpt:
         model.load_state_dict(ckpt["model_state"])
     else:
@@ -141,9 +141,9 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     # data
     parser.add_argument('--image_folder', type=str,
-                        default='../resized_images/{}/')
+                        default='/home/deokhk/coursework/fashion-iq/transformer/resized_images/{}/')
     parser.add_argument('--label_file', type=str,
-                        default='data/attribute2idx.json')
+                        default='/home/deokhk/coursework/fashion-iq/transformer/attribute2idx.json')
     parser.add_argument('--crop_size', type=int, default=224,
                         help='size for randomly cropping images')
     parser.add_argument('--data_set', type=str, default='dress',
@@ -151,10 +151,10 @@ if __name__ == '__main__':
 
     # model
     parser.add_argument('--pretrained_model', type=str,
-                        default='dfattributes_efficientnet_b7ns.pth')
+                        default='./models/attributes_dress_ft.pth')
 
     parser.add_argument('--no_cuda', action='store_true')
-    parser.add_argument('--batch_size', type=int, default=2)
+    parser.add_argument('--batch_size', type=int, default=256)
 
     args = parser.parse_args()
     print(args)

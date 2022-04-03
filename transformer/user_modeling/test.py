@@ -17,7 +17,7 @@ from pycocoevalcap.tokenizer.ptbtokenizer import PTBTokenizer
 from pycocoevalcap.bleu.bleu import Bleu
 # from pycocoevalcap.meteor.meteor import Meteor
 from pycocoevalcap.rouge.rouge import Rouge
-from pycocoevalcap.ciderd.ciderD import CiderD
+# from pycocoevalcap.ciderd.ciderD import CiderD
 from pycocoevalcap.cider.cider import Cider
 # from pycocoevalcap.spice.spice import Spice
 
@@ -115,7 +115,7 @@ def test(opt):
         (Rouge(), "ROUGE_L"),
         # (Cider(), "CIDEr"),
         (Cider(), "CIDEr"),
-        (CiderD(), "CIDEr-D")
+        #(CiderD(), "CIDEr-D")
         # (Spice(), "SPICE")
     ]
 

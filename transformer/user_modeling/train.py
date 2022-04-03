@@ -417,9 +417,9 @@ def main():
     ''' Main function '''
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('-data_train', type=str, default="")
-    parser.add_argument('-data_dev', required=True)
-    parser.add_argument('-data_test', type=str, default="")
+    parser.add_argument('-data_train', type=str, default="/home/deokhk/coursework/fashion-iq/data/captions/cap.dress.train.json")
+    parser.add_argument('-data_dev', type=str, default="/home/deokhk/coursework/fashion-iq/data/captions/cap.dress.val.json")
+    parser.add_argument('-data_test', type=str, default="/home/deokhk/coursework/fashion-iq/data/captions/cap.dress.test.json")
     parser.add_argument('-vocab', required=True)
 
     parser.add_argument('-epoch', type=int, default=10000)
@@ -439,13 +439,13 @@ def main():
     # parser.add_argument('-embs_share_weight', action='store_true')
     # parser.add_argument('-proj_share_weight', action='store_true')
 
-    parser.add_argument('-log', default=None)
-    parser.add_argument('-save_model', default=None)
+    parser.add_argument('-log', default='/home/deokhk/coursework/fashion-iq/transformer/user_modeling/log')
+    parser.add_argument('-save_model', default='/home/deokhk/coursework/fashion-iq/transformer/user_modeling/models/')
     parser.add_argument('-save_mode', type=str, choices=['all', 'best'], default='best')
 
     parser.add_argument('-no_cuda', action='store_true')
     parser.add_argument('-label_smoothing', action='store_true')
-    parser.add_argument('-num_workers', type=int, default=1)
+    parser.add_argument('-num_workers', type=int, default=4)
 
     parser.add_argument('-cnn_name', type=str, default="resnet101")
     parser.add_argument('-cnn_pretrained_model', type=str, default="")

@@ -41,7 +41,6 @@ def evaluate_model(data_loader, model, loss, device):
     error_sum = 0.0
     # Training loop
     fs_sum = 0.0
-    print("Now evaluating!")
     total_length = len(data_loader)
     for i, (images, labels, _) in enumerate(data_loader):
         # Set mini-batch dataset
@@ -55,8 +54,6 @@ def evaluate_model(data_loader, model, loss, device):
             fs_sum += fs.item() * images.size(0)
 
             test_num += images.size(0)
-        if i%10 == 0:
-            print(f"{i} / {total_length} Done.")
 
     return error_sum / test_num, fs_sum / test_num
 
@@ -150,7 +147,7 @@ def finetune_attributes(args):
             with open(os.path.join(save_folder, 'log.txt'), 'a+') as f_log:
                 f_log.write(s + '\n')
 
-    for epoch in range(200):
+    for epoch in range(1000):
         if global_step % args.checkpoint == 0:
             model.eval()
             logging('-' * 87)
@@ -239,7 +236,7 @@ if __name__ == '__main__':
                         help='patient for reducing learning rate')
 
     parser.add_argument('--no_cuda', action='store_true')
-    parser.add_argument('--batch_size', type=int, default=512)
+    parser.add_argument('--batch_size', type=int, default=1024)
     parser.add_argument('--learning_rate', type=float, default=0.001)
 
     args = parser.parse_args()

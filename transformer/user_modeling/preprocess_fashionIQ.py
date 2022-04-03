@@ -282,6 +282,104 @@ def process_url(url):
     #         f.close()
     return file
 
+def preprocess_data_from_deokhk(topic):
+    IMAGE_ROOT = '/resized_images/{}/'
+    CAPT = 'captions/cap.{}.{}.json'
+    LABEL = '/home/deokhk/coursework/fashion-iq/transformer/attribute_prediction/fashion_iq_{}.json'
+    DICT = '/home/deokhk/coursework/fashion-iq/transformer/attribute2idx.json'
+    # SPLIT = 'image_splits/split.{}.{}.json'
+
+    training_json = json.load(open("/home/deokhk/coursework/fashion-iq/data/" + CAPT.format(topic, 'train')))
+    dev_json = json.load(open("/home/deokhk/coursework/fashion-iq/data/" + CAPT.format(topic, 'val')))
+    image_path = '/home/deokhk/coursework/fashion-iq/transformer' + IMAGE_ROOT.format(topic)
+    data_train = []
+    data_dev = []
+    data_dev_combine = []
+
+
+    label_predict = LABEL.format(topic)
+    label_predict = json.load(open(label_predict))
+
+
+    label_dic = json.load(open(DICT))
+
+    # for line in label_json:
+    #     label_dic[line['image']] = {}
+    #     label_dic[line['image']]["id"] = line["predict_id"]
+    #     label_dic[line['image']]["pred"] = line["prediction"]
+
+    for idx, entry in enumerate(training_json):
+        try:
+            image0 = image_path + entry["candidate"] + '.jpg'
+
+            image0_label = [ label_dic[x] for x in label_predict[entry["candidate"]]["predict"]]
+
+            image1 = image_path + entry["target"] + ".jpg"
+
+            image1_label = [ label_dic[x] for x in label_predict[entry["target"]]["predict"]]
+
+            caps = entry["captions"]
+
+            for cap in caps:
+
+                data_train.append({'image0': image0, 'image1':image1, "captions":cap, \
+                                    "image0_label":image0_label,
+                                    "image1_label":image1_label
+                                    })
+        except KeyError:
+            print(f"Keyerror occured. entry idx: {idx}")
+        
+
+    for idx, entry in enumerate(dev_json):
+        try:
+            image0 = image_path + entry["candidate"] + '.jpg'
+            image0_label = [ label_dic[x] for x in label_predict[entry["candidate"]]["predict"]]
+            image1 = image_path + entry["target"] + ".jpg"
+            image1_label = [ label_dic[x] for x in label_predict[entry["target"]]["predict"]]
+            caps = entry["captions"]
+            for cap in caps:
+
+                data_dev.append({'image0': image0, 'image1':image1, "captions":cap,\
+                                    "image0_label":image0_label,
+                                    "image1_label":image1_label
+                                    })
+
+            data_dev_combine.append({'image0': image0, 'image1':image1, "captions":caps,\
+                                        "image0_label":image0_label,
+                                        "image1_label":image1_label
+                                    })
+        except KeyError:
+            print(f"Keyerror occured. entry idx: {idx}")
+
+
+
+    file_prefix = "/home/deokhk/coursework/fashion-iq/data/user_modeling" + "/" + topic
+    if not os.path.exists(file_prefix):
+        os.makedirs(file_prefix)
+
+    with open(file_prefix +  '/data_train.json', 'w') as outfile:
+        json.dump(data_train, outfile)
+
+    with open(file_prefix +  '/data_dev.json', 'w') as outfile:
+        json.dump(data_dev, outfile)
+
+    with open(file_prefix + '/data_dev_combine.json', 'w') as outfile:
+        json.dump(data_dev_combine, outfile)
+
+
+def process_url(url):
+    file = parse_url(url)
+    if file[-1] == '.':
+        file = file + 'jpg'
+    # make_folder(folder)
+
+    # if not os.path.isfile(file):
+    #     with open(file, 'wb') as f:
+    #         resp = requests.get(url, verify=False)
+    #         f.write(resp.content)
+    #         f.close()
+    return file
+
 def main(args):
     ''' Main function '''
 
