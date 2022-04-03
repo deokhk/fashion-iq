@@ -36,7 +36,7 @@ class Dataset(data.Dataset):
         id = self.ids[index]
         asin = self.asin[id]
         img_name = self.asin[id] + '.jpg'
-
+        
         image = Image.open(os.path.join(self.root, img_name)).convert('RGB')
         if self.transform is not None:
             image = self.transform(image)

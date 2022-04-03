@@ -75,6 +75,8 @@ def finetune_attributes(args):
                              (0.229, 0.224, 0.225))])
 
     image_folder = args.image_folder.format(args.data_set)
+    print(f"image_folder = {image_folder}")
+    print(f"data+file = {args.data_file.format(args.data_set, 'train')}")
     data_file = args.data_file
     train_data_loader = attribute_loader.get_loader(
         root=image_folder,
@@ -201,7 +203,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     # data
     parser.add_argument('--image_folder', type=str,
-                        default='../resized_images/{}/')
+                        default='/home/deokhk/coursework/fashion-iq/transformer/resized_images/resized_images/{}/')
     parser.add_argument('--data_file', type=str,
                         default='/home/deokhk/coursework/fashion-iq/data/asin2attr.{}.{}.json')
     parser.add_argument('--label_file', type=str,
