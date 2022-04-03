@@ -12,12 +12,8 @@ from efficientnet_pytorch import EfficientNet
 
 
 def create_exp_dir(path, scripts_to_save=None):
-    curdir = os.getcwd()
-    target_path = os.path.join(curdir, path)
-    print(target_path)
-    if not os.path.exists(target_path):
-        print('Make a save directory:', path)
-        os.mkdir(target_path)
+    if not os.path.exists(path):
+        os.mkdir(path)
     print('Experiment dir : {}'.format(path))
     if scripts_to_save is not None:
         if not os.path.exists(os.path.join(path, 'scripts')):
@@ -59,7 +55,7 @@ def evaluate_model(data_loader, model, loss, device):
             fs_sum += fs.item() * images.size(0)
 
             test_num += images.size(0)
-        if i%100 == 0:
+        if i%10 == 0:
             print(f"{i} / {total_length} Done.")
 
     return error_sum / test_num, fs_sum / test_num
@@ -103,28 +99,21 @@ def finetune_attributes(args):
         shuffle=False)
 
     # Load the models
-    print('Load the models')
     model = EfficientNet.from_pretrained('efficientnet-b7')
-    model_type = 'ft'
+    if torch.cuda.device_count() > 1:
+        print("Let's use", torch.cuda.device_count(), "GPUs!")
+        model = nn.DataParallel(model)
 
+    model_type = 'ft'
     '''
     ckpt = torch.load(args.pretrained_model, map_location='cpu')
     if "model_state" in ckpt:
         model.load_state_dict(ckpt["model_state"])
     else:
         model.load_state_dict(ckpt)
-    model.to(device)
     '''
-    print('Setting trainable parameters')
-    trainable_parameters = []
-    for name, param in model.named_parameters():
-        param.requires_grad = True
-        trainable_parameters.append(param)
-    for name, param in model.named_parameters():
-        if param.requires_grad:
-            print(name)
     model.to(device)
-    '''
+
     # - freeze the bottom part
     trainable_parameters = []
     for name, param in model.named_parameters():
@@ -138,16 +127,13 @@ def finetune_attributes(args):
         if param.requires_grad:
             print(name)
     model.to(device)
-    '''
-    
+
     # Loss and optimizer
-    print('Loss and optimizer')
     current_lr = args.learning_rate
     optimizer = torch.optim.Adam(lr=current_lr, params=trainable_parameters)
     bce_average = nn.BCEWithLogitsLoss(reduction='mean').to(device)
 
     # Experiment logging
-    print('Experiment logging')
     global_step = 0
     cur_patient = 0
     best_score = float('-inf')
@@ -164,7 +150,7 @@ def finetune_attributes(args):
             with open(os.path.join(save_folder, 'log.txt'), 'a+') as f_log:
                 f_log.write(s + '\n')
 
-    for epoch in range(100):
+    for epoch in range(200):
         if global_step % args.checkpoint == 0:
             model.eval()
             logging('-' * 87)
@@ -253,7 +239,7 @@ if __name__ == '__main__':
                         help='patient for reducing learning rate')
 
     parser.add_argument('--no_cuda', action='store_true')
-    parser.add_argument('--batch_size', type=int, default=16)
+    parser.add_argument('--batch_size', type=int, default=512)
     parser.add_argument('--learning_rate', type=float, default=0.001)
 
     args = parser.parse_args()

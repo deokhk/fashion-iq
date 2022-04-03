@@ -27,8 +27,6 @@ class Dataset(data.Dataset):
 
         with open(class_file, 'r') as f:
             self.cls = json.load(f)
-            print(class_file)
-            print(self.cls)
 
         self.transform = transform
         return
