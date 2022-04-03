@@ -417,9 +417,9 @@ def main():
     ''' Main function '''
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('-data_train', type=str, default="/home/deokhk/coursework/fashion-iq/data/captions/cap.dress.train.json")
-    parser.add_argument('-data_dev', type=str, default="/home/deokhk/coursework/fashion-iq/data/captions/cap.dress.val.json")
-    parser.add_argument('-data_test', type=str, default="/home/deokhk/coursework/fashion-iq/data/captions/cap.dress.test.json")
+    parser.add_argument('-data_train', type=str, default="/home/deokhk/coursework/fashion-iq/data/user_modeling/dress/data_train.json")
+    parser.add_argument('-data_dev', type=str, default="/home/deokhk/coursework/fashion-iq/data/user_modeling/dress/data_dev.json")
+    parser.add_argument('-data_test', type=str, default="/home/deokhk/coursework/fashion-iq/data/user_modeling/dress/data_train.json")
     parser.add_argument('-vocab', required=True)
 
     parser.add_argument('-epoch', type=int, default=10000)
